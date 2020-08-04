@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const messenger = require('./messenger')
 
 const app = express()
 app.use(bodyParser.json())
@@ -16,39 +17,47 @@ app.get('/', (req, res) => {
   res.json({success: 'Webhook service online'});
 });
 
-
 app.get('/webhook', (req, res) => {
-  let VERIFY_TOKEN = "asdf"
+  const VERIFY_TOKEN = process.env.VERIFY_TOKEN
 
-  let mode = req.query['hub.mode'];
-  let token = req.query['hub.verify_token'];
-  let challenge = req.query['hub.challenge'];
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
 
   if (mode && token) {
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       console.log('WEBHOOK_VERIFIED');
       res.status(200).send(challenge);
 
-    } else {
+    }
+    else {
       res.sendStatus(403);
     }
   }
 });
 
 app.post('/webhook', (req, res) => {
-  let body = req.body;
+  const body = req.body;
 
   if (body.object === 'page') {
     body.entry.forEach((entry) => {
-      let webhook_event = entry.messaging[0];
+      const webhook_event = entry.messaging[0];
       console.log(webhook_event);
-    });
 
-    res.status(200).send('EVENT_RECEIVED');
-  } else {
+      const sender_psid = webhook_event.sender.id;
+      console.log('Sender ID: ' + sender_psid);
+
+      if (webhook_event.message) {
+        messenger.handleMessage(res, sender_psid, webhook_event.message);
+      }
+      else if (webhook_event.postback) {
+        messenger.handlePostback(res, sender_psid, webhook_event.postback);
+      }
+    });
+  }
+  else {
     res.sendStatus(404);
   }
-
 });
 
 
