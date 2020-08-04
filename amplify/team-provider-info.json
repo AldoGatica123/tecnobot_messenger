@@ -1,0 +1,15 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-tecnobotmessenger-dev-214918-authRole",
+            "UnauthRoleArn": "arn:aws:iam::817410595580:role/amplify-tecnobotmessenger-dev-214918-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::817410595580:role/amplify-tecnobotmessenger-dev-214918-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-tecnobotmessenger-dev-214918-deployment",
+            "UnauthRoleName": "amplify-tecnobotmessenger-dev-214918-unauthRole",
+            "StackName": "amplify-tecnobotmessenger-dev-214918",
+            "StackId": "arn:aws:cloudformation:us-east-1:817410595580:stack/amplify-tecnobotmessenger-dev-214918/7a61c5f0-d605-11ea-a36b-0ab389d40b93",
+            "AmplifyAppId": "dqthfja3ldli"
+        }
+    }
+}

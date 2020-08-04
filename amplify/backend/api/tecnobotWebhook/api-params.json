@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/webhook",
+            "lambdaFunction": "webhook",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "tecnobotWebhook",
+    "apiName": "tecnobotWebhook",
+    "functionArns": [
+        {
+            "lambdaFunction": "webhook"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-tecnobotmessenger-dev-214918-authRole",
+        "unAuthRoleName": "amplify-tecnobotmessenger-dev-214918-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "webhook",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
