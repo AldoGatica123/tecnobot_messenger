@@ -1,13 +1,42 @@
 const request = require('request')
+const dialogflow = require('@google-cloud/dialogflow');
+const uuid = require('uuid');
 
-const handleMessage = (res, sender_psid, received_message) => {
+
+const runQuery = async (received_message) => {
+  const projectId = process.env.GCP_PROJECT_ID
+  const sessionId = uuid.v4();
+
+  const sessionClient =  new dialogflow.SessionsClient({
+    projectId,
+    keyFilename: "../credentials/tecnobot-skatrn-3255a66c9c97.json",
+  });
+  const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
+
+  const request = {
+    session: sessionPath,
+    queryInput: {
+      text: {
+        text: received_message.text,
+        languageCode: 'es',
+      },
+    },
+  };
+
+  const responses = await sessionClient.detectIntent(request);
+  console.log('Response: ' + JSON.stringify(responses[0].queryResult));
+  return responses[0].queryResult.fulfillmentText;
+}
+
+const handleMessage = async (res, sender_psid, received_message) => {
   let response;
 
   if (received_message.text) {
     response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
+      "text": await runQuery(received_message)
     }
-  } else if (received_message.attachments) {
+  }
+  else if (received_message.attachments) {
     let attachment_url = received_message.attachments[0].payload.url;
     response = {
       "attachment": {
@@ -35,7 +64,6 @@ const handleMessage = (res, sender_psid, received_message) => {
       }
     }
   }
-
   callSendAPI(res, sender_psid, response);
 }
 
