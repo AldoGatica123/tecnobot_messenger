@@ -1,17 +1,16 @@
 const request = require('request')
 const dialogflow = require('@google-cloud/dialogflow');
-const uuid = require('uuid');
+const responses_ = require('./responses');
 
 
-const runQuery = async (received_message) => {
+const runQuery = async (received_message, sender_psid) => {
   const projectId = process.env.GCP_PROJECT_ID
-  const sessionId = uuid.v4();
 
   const sessionClient =  new dialogflow.SessionsClient({
     projectId,
-    keyFilename: "../credentials/tecnobot-skatrn-3255a66c9c97.json",
+    keyFilename: "./credentials/tecnobot-skatrn-3255a66c9c97.json",
   });
-  const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
+  const sessionPath = sessionClient.projectAgentSessionPath(projectId, sender_psid);
 
   const request = {
     session: sessionPath,
@@ -25,44 +24,14 @@ const runQuery = async (received_message) => {
 
   const responses = await sessionClient.detectIntent(request);
   console.log('Response: ' + JSON.stringify(responses[0].queryResult));
-  return responses[0].queryResult.fulfillmentText;
+  return responses_.handleResponse(responses[0].queryResult);
 }
 
 const handleMessage = async (res, sender_psid, received_message) => {
   let response;
 
   if (received_message.text) {
-    response = {
-      "text": await runQuery(received_message)
-    }
-  }
-  else if (received_message.attachments) {
-    let attachment_url = received_message.attachments[0].payload.url;
-    response = {
-      "attachment": {
-        "type": "template",
-        "payload": {
-          "template_type": "generic",
-          "elements": [{
-            "title": "Is this the right picture?",
-            "subtitle": "Tap a button to answer.",
-            "image_url": attachment_url,
-            "buttons": [
-              {
-                "type": "postback",
-                "title": "Yes!",
-                "payload": "yes",
-              },
-              {
-                "type": "postback",
-                "title": "No!",
-                "payload": "no",
-              }
-            ],
-          }]
-        }
-      }
-    }
+    response = await runQuery(received_message, sender_psid)
   }
   callSendAPI(res, sender_psid, response);
 }
@@ -103,7 +72,6 @@ const callSendAPI = (res, sender_psid, response) => {
     }
   });
 }
-
 
 exports.handleMessage = handleMessage;
 exports.handlePostback = handlePostback;
