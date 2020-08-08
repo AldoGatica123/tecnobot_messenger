@@ -5,6 +5,7 @@ const handleResponse = (result) => {
     case '01.welcome':
       response = welcomeMessage();
       break;
+
     default:
       response = {"text": result.fulfillmentText};
   }
