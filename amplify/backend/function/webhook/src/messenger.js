@@ -31,7 +31,15 @@ const handleMessage = async (res, sender_psid, received_message) => {
   let response;
 
   if (received_message.text) {
-    response = await runQuery(received_message, sender_psid)
+    if (received_message.text.length > 30){
+      response = responses_.maxLengthReached();
+    }
+    else if (received_message.text.length < 3){
+      response = responses_.minLengthReached();
+    }
+    else{
+      response = await runQuery(received_message, sender_psid);
+    }
   }
   callSendAPI(res, sender_psid, response);
 }
@@ -65,7 +73,7 @@ const callSendAPI = (res, sender_psid, response) => {
   }, (err, response, body) => {
     if (!err) {
       console.log('message sent!');
-      res.status(200).send('MESSAGE SENT');
+      res.status(200).send(request_body);
     } else {
       console.error("Unable to send message:" + err);
       res.status(500).send('UNABLE TO SEND MESSAGE');
