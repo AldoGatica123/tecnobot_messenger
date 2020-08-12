@@ -1,68 +1,76 @@
 const request = require('request')
-const dialogflow = require('@google-cloud/dialogflow');
 const responses_ = require('./responses');
 
 
-const runQuery = async (received_message, sender_psid) => {
-  const projectId = process.env.GCP_PROJECT_ID
-
-  const sessionClient =  new dialogflow.SessionsClient({
-    projectId,
-    keyFilename: "./credentials/tecnobot-skatrn-3255a66c9c97.json",
-  });
-  const sessionPath = sessionClient.projectAgentSessionPath(projectId, sender_psid);
-
-  const request = {
-    session: sessionPath,
-    queryInput: {
-      text: {
-        text: received_message.text,
-        languageCode: 'es',
-      },
-    },
-  };
-
-  const responses = await sessionClient.detectIntent(request);
-  console.log('Response: ' + JSON.stringify(responses[0].queryResult));
-  return responses_.handleResponse(responses[0].queryResult);
-}
-
-const handleMessage = async (res, sender_psid, received_message) => {
-  let response;
+const handleMessage = (sender_psid, received_message) => {
+  let responses;
 
   if (received_message.text) {
-    if (received_message.text.length > 30){
-      response = responses_.maxLengthReached();
-    }
-    else if (received_message.text.length < 3){
-      response = responses_.minLengthReached();
-    }
-    else{
-      response = await runQuery(received_message, sender_psid);
-    }
+    responses = responses_.handleResponse(received_message.text);
   }
-  callSendAPI(res, sender_psid, response);
+
+  handleResponses(sender_psid, responses);
 }
 
-const handlePostback = (res, sender_psid, received_postback) => {
-  console.log('ok')
-  let response;
-  let payload = received_postback.payload;
+const handlePostback = (sender_psid, received_postback) => {
+  let responses;
+  const payload = received_postback.payload;
+  console.log(payload)
 
-  if (payload === 'yes') {
-    response = { "text": "Thanks!" }
-  } else if (payload === 'no') {
-    response = { "text": "Oops, try sending another image." }
+  switch (payload) {
+    case 'GET_STARTED':
+      responses = responses_.welcomeMessage();
+      break;
+    case 'HELP':
+      responses = responses_.helpMessage();
+      break;
+    case 'TALK_HUMAN':
+      responses = responses_.talkHuman()
+      break;
+    case 'INIT_CAMPAIGN':
+      responses = responses_.initCampaign()
+      break;
+    default:
+      responses = responses_.welcomeMessage()
+      break
   }
-  callSendAPI(res, sender_psid, response);
+  handleResponses(sender_psid, responses);
 }
 
-const callSendAPI = (res, sender_psid, response) => {
+const handleReferral = (referral) => {
+  let payload = referral.ref.toUpperCase();
+  console.log(payload)
+
+  return [payload]
+}
+
+const handleResponses = (sender_psid, responses) => {
+  if (Array.isArray(responses)) {
+    let delay = 0;
+    for (const response of responses) {
+      sendMessage(sender_psid, response, delay * 2500);
+      delay++;
+    }
+  }
+  else {
+    sendMessage(sender_psid, responses);
+  }
+}
+
+const sendMessage = (sender_psid, response, delay = 0) => {
+  if ("delay" in response) {
+    delay = response["delay"];
+    delete response["delay"];
+  }
+  setTimeout(() => callSendAPI(sender_psid, response), delay);
+}
+
+const callSendAPI = (sender_psid, response) => {
   let request_body = {
     "recipient": {
       "id": sender_psid
     },
-    "message": response
+    "message": JSON.stringify(response)
   }
 
   request({
@@ -72,14 +80,13 @@ const callSendAPI = (res, sender_psid, response) => {
     "json": request_body
   }, (err, response, body) => {
     if (!err) {
-      console.log('message sent!');
-      res.status(200).send(request_body);
+      console.log(request_body);
     } else {
       console.error("Unable to send message:" + err);
-      res.status(500).send('UNABLE TO SEND MESSAGE');
     }
   });
 }
 
 exports.handleMessage = handleMessage;
 exports.handlePostback = handlePostback;
+exports.handleReferral = handleReferral;
