@@ -47,7 +47,7 @@ const helpMessage = () => {
       }, {
         content_type: "text",
         title: "Completar pago de campañas de marketing",
-        payload: "finish_payment",
+        payload: "complete_payment",
       }
     ]
   }
@@ -62,7 +62,11 @@ const initCampaign = () => {
 }
 
 const talkHuman = () => {
-  return [{ text: "En un momento te atenderá un operador! 1" }, { text: "En un momento te atenderá un operador! 2" }]
+  return { text: "En un momento te atenderá un operador!" }
+}
+
+const completePayment = () => {
+  return { text: "Cuál es tu número de transacción?" }
 }
 
 exports.initCampaign = initCampaign;
@@ -70,3 +74,4 @@ exports.talkHuman = talkHuman;
 exports.helpMessage = helpMessage;
 exports.welcomeMessage = welcomeMessage;
 exports.handleResponse = handleResponse;
+exports.completePayment = completePayment;

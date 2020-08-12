@@ -1,39 +1,16 @@
 const request = require('request')
 const responses_ = require('./responses');
-
+const campaign = require('./create_campaign');
 
 const handleMessage = (res, sender_psid, received_message) => {
   let responses;
 
   if (received_message.text) {
-    responses = responses_.handleResponse(received_message.text);
-  }
-  else if (received_message.attachments) {
-    let attachment_url = received_message.attachments[0].payload.url;
-    responses = {
-      "attachment": {
-        "type": "template",
-        "payload": {
-          "template_type": "generic",
-          "elements": [{
-            "title": "Is this the right picture?",
-            "subtitle": "Tap a button to answer.",
-            "image_url": attachment_url,
-            "buttons": [
-              {
-                "type": "postback",
-                "title": "Yes!",
-                "payload": "yes",
-              },
-              {
-                "type": "postback",
-                "title": "No!",
-                "payload": "no",
-              }
-            ],
-          }]
-        }
-      }
+    if (campaign.isFillingCampaign(sender_psid)){
+      responses = campaign.campaignResponse(received_message.text, sender_psid);
+    }
+    else{
+      responses = responses_.handleResponse(received_message.text);
     }
   }
 
@@ -43,7 +20,7 @@ const handleMessage = (res, sender_psid, received_message) => {
 const handlePostback = (res, sender_psid, received_postback) => {
   let responses;
   const payload = received_postback.payload;
-  console.log(payload)
+  console.log("Postback: " + payload)
 
   switch (payload) {
     case 'get_started':
@@ -53,23 +30,21 @@ const handlePostback = (res, sender_psid, received_postback) => {
       responses = responses_.helpMessage();
       break;
     case 'talk_human':
-      responses = responses_.talkHuman()
+      responses = responses_.talkHuman();
       break;
     case 'init_campaign':
-      responses = responses_.initCampaign()
+      campaign.initCampaign(sender_psid);
+      responses = responses_.initCampaign();
+      break;
+    case 'complete_payment':
+      responses = responses_.completePayment();
       break;
     default:
-      responses = responses_.welcomeMessage()
+      responses = responses_.helpMessage();
       break
-  }
-  if (payload === 'yes') {
-    responses = { "text": "Thanks!" }
-  } else if (payload === 'no') {
-    responses = { "text": "Oops, try sending another image." }
   }
   handleResponses(res, sender_psid, responses);
 }
-
 
 const handleResponses = (res, sender_psid, responses) => {
   if (Array.isArray(responses)) {
