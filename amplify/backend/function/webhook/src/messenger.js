@@ -2,70 +2,100 @@ const request = require('request')
 const responses_ = require('./responses');
 
 
-const handleMessage = (sender_psid, received_message) => {
+const handleMessage = (res, sender_psid, received_message) => {
   let responses;
 
   if (received_message.text) {
     responses = responses_.handleResponse(received_message.text);
   }
+  else if (received_message.attachments) {
+    let attachment_url = received_message.attachments[0].payload.url;
+    responses = {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "generic",
+          "elements": [{
+            "title": "Is this the right picture?",
+            "subtitle": "Tap a button to answer.",
+            "image_url": attachment_url,
+            "buttons": [
+              {
+                "type": "postback",
+                "title": "Yes!",
+                "payload": "yes",
+              },
+              {
+                "type": "postback",
+                "title": "No!",
+                "payload": "no",
+              }
+            ],
+          }]
+        }
+      }
+    }
+  }
 
-  handleResponses(sender_psid, responses);
+  handleResponses(res, sender_psid, responses);
 }
 
-const handlePostback = (sender_psid, received_postback) => {
+const handlePostback = (res, sender_psid, received_postback) => {
   let responses;
   const payload = received_postback.payload;
   console.log(payload)
 
   switch (payload) {
-    case 'GET_STARTED':
+    case 'get_started':
       responses = responses_.welcomeMessage();
       break;
-    case 'HELP':
+    case 'help':
       responses = responses_.helpMessage();
       break;
-    case 'TALK_HUMAN':
+    case 'talk_human':
       responses = responses_.talkHuman()
       break;
-    case 'INIT_CAMPAIGN':
+    case 'init_campaign':
       responses = responses_.initCampaign()
       break;
     default:
       responses = responses_.welcomeMessage()
       break
   }
-  handleResponses(sender_psid, responses);
+  if (payload === 'yes') {
+    responses = { "text": "Thanks!" }
+  } else if (payload === 'no') {
+    responses = { "text": "Oops, try sending another image." }
+  }
+  handleResponses(res, sender_psid, responses);
 }
 
-const handleReferral = (referral) => {
-  let payload = referral.ref.toUpperCase();
-  console.log(payload)
 
-  return [payload]
-}
-
-const handleResponses = (sender_psid, responses) => {
+const handleResponses = (res, sender_psid, responses) => {
   if (Array.isArray(responses)) {
     let delay = 0;
-    for (const response of responses) {
-      sendMessage(sender_psid, response, delay * 2500);
+    for (i = 0; i < responses.length - 1; i++){
+      const response = responses[i];
+      sendMessage(res, sender_psid, response, false, delay * 2500);
       delay++;
     }
+    const last = responses[responses.length-1];
+    sendMessage(res, sender_psid, last, true, delay * 2500);
   }
   else {
-    sendMessage(sender_psid, responses);
+    sendMessage(res, sender_psid, responses, true);
   }
 }
 
-const sendMessage = (sender_psid, response, delay = 0) => {
+const sendMessage = (res, sender_psid, response, last, delay = 0) => {
   if ("delay" in response) {
     delay = response["delay"];
     delete response["delay"];
   }
-  setTimeout(() => callSendAPI(sender_psid, response), delay);
+  setTimeout(async() => await callSendAPI(res, sender_psid, response, last), delay);
 }
 
-const callSendAPI = (sender_psid, response) => {
+const callSendAPI = (res, sender_psid, response, last) => {
   let request_body = {
     "recipient": {
       "id": sender_psid
@@ -80,6 +110,9 @@ const callSendAPI = (sender_psid, response) => {
     "json": request_body
   }, (err, response, body) => {
     if (!err) {
+      if (last){
+        res.status(200).send({message: "SENDING MESSAGE"});
+      }
       console.log(request_body);
     } else {
       console.error("Unable to send message:" + err);
@@ -89,4 +122,3 @@ const callSendAPI = (sender_psid, response) => {
 
 exports.handleMessage = handleMessage;
 exports.handlePostback = handlePostback;
-exports.handleReferral = handleReferral;

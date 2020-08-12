@@ -39,7 +39,7 @@ const helpMessage = () => {
       {
         content_type: "text",
         title: "Quiero hablar con un humano",
-        payload: "human",
+        payload: "talk_human",
       }, {
         content_type: "text",
         title: "Iniciar campaña de marketing",
@@ -62,7 +62,7 @@ const initCampaign = () => {
 }
 
 const talkHuman = () => {
-  return [{ text: "En un momento te atenderá un operador!" }, { text: "En un momento te atenderá un operador!" }]
+  return [{ text: "En un momento te atenderá un operador! 1" }, { text: "En un momento te atenderá un operador! 2" }]
 }
 
 exports.initCampaign = initCampaign;

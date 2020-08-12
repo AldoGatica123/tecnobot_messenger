@@ -37,9 +37,9 @@ app.get('/webhook', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   const body = req.body;
+  console.log(JSON.stringify(body))
 
   if (body.object === 'page') {
-    res.status(200).send({message: "SENDING MESSAGE"});
     body.entry.forEach((entry) => {
       const webhook_event = entry.messaging[0];
       console.log(webhook_event);
@@ -48,18 +48,12 @@ app.post('/webhook', (req, res) => {
       console.log('Sender ID: ' + sender_psid);
 
       if (webhook_event.message) {
-        messenger.handleMessage(sender_psid, webhook_event.message);
+        messenger.handleMessage(res, sender_psid, webhook_event.message);
       }
       else if (webhook_event.postback) {
-        messenger.handlePostback(sender_psid, webhook_event.postback);
-      }
-      else if (webhook_event.referral) {
-        messenger.handleReferral(sender_psid, webhook_event.referral);
+        messenger.handlePostback(res, sender_psid, webhook_event.postback);
       }
     });
-  }
-  else {
-    res.status(404).send({message: "NOT FOUND"});
   }
 });
 
