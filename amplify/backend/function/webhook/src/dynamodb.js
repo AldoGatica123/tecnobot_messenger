@@ -1,11 +1,18 @@
 const AWS = require('aws-sdk');
+const responses_ = require('./responses')
 
 AWS.config.update({
   region: "us-east-1"
 });
 const client = new AWS.DynamoDB.DocumentClient();
 
-const conversationExists = (psid, callback) => {
+const savetoDB = (message, field_name)  => {
+  
+
+  console.log('Saving ' + message + ' in field ' + field_name);
+}
+
+const getConversation = (psid, callback) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Key:{
@@ -15,10 +22,8 @@ const conversationExists = (psid, callback) => {
 
   client.get(params, (err, data) => {
     if (err) {
-      console.error("Unable to read item. Error JSON:", JSON.stringify(err));
       callback(err, null);
     } else {
-      console.log("GetItem succeeded:", JSON.stringify(data));
       callback(null, data.Item);
     }
   });
@@ -30,8 +35,17 @@ const createConversation = (psid) => {
   const params = {
     TableName: table,
     Item:{
-      "psid": psid,
-      "fillingData": true
+      psid: psid,
+      filling_data: "business_name",
+      business_name: "",
+      phone: "",
+      website: "",
+      slogan: "",
+      description: "",
+      history: "",
+      location: "",
+      search_terms: "",
+      marketing_package: "",
     }
   };
 
@@ -46,6 +60,6 @@ const createConversation = (psid) => {
   });
 }
 
-
-exports.conversationExists = conversationExists;
+exports.savetoDB = savetoDB;
+exports.getConversation = getConversation;
 exports.createConversation = createConversation;
