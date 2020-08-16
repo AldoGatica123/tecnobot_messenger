@@ -20,14 +20,18 @@ const campaignResponse = (message, psid, conversation) => {
     return responses_.finishedCampaignQuestions();
   }
   else{
-    dynamodb.savetoDB(message, current_field);
-    return responses_.nextFieldRequired(psid, message, current_field, getEmptyField(conversation))
+    console.log("Saving " + message + " in " + current_field);
+    conversation[current_field] = message;
+    const next_field = getEmptyField(conversation);
+    conversation["filling_data"] = next_field;
+    dynamodb.savetoDB(conversation);
+    return responses_.nextFieldRequired(psid, message, current_field, next_field);
   }
 }
 
 const getEmptyField = (conversation) => {
   console.log("Checking fields: " + JSON.stringify(conversation));
-  let emptyField = undefined;
+  let emptyField = "FINISHED";
   const fieldList = ["business_name", "marketing_package", "website", "phone", "location", "slogan", "description",
     "history", "search_terms"]
   Object.keys(fieldList).forEach(field => {

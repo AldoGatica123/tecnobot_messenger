@@ -1,15 +1,22 @@
 const AWS = require('aws-sdk');
-const responses_ = require('./responses')
 
 AWS.config.update({
   region: "us-east-1"
 });
 const client = new AWS.DynamoDB.DocumentClient();
 
-const savetoDB = (message, field_name)  => {
-  
-
-  console.log('Saving ' + message + ' in field ' + field_name);
+const savetoDB = (conversation)  => {
+  const params = {
+    TableName: process.env.TABLE_NAME,
+    Item: conversation
+  };
+  client.put(params, (err, data) => {
+    if (err) {
+      console.log("Error", err);
+    } else {
+      console.log("Success", data);
+    }
+  });
 }
 
 const getConversation = (psid, callback) => {
@@ -30,10 +37,8 @@ const getConversation = (psid, callback) => {
 }
 
 const createConversation = (psid) => {
-  const table = process.env.TABLE_NAME;
-
   const params = {
-    TableName: table,
+    TableName: process.env.TABLE_NAME,
     Item:{
       psid: psid,
       filling_data: "business_name",
