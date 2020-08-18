@@ -47,7 +47,7 @@ const isFillingCampaign = (psid, callback) => {
   dynamodb.getConversation(psid, (err, item) => {
     if (item) {
       if (item.filling_data){
-        console.log("Fill conversation data");
+        console.log("Conversation data exists");
         callback(true, item);
       }
       else {

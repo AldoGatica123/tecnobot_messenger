@@ -1,5 +1,5 @@
 const handleResponse = (message) => {
-  return {text: "You said " + message + " passing to a human..."};
+  return {text: "You said " + message + ". passing to a human..."};
 }
 
 const welcomeMessage = () => {

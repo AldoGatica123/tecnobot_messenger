@@ -7,7 +7,7 @@ const handleMessage = (res, sender_psid, received_message) => {
 
   if (received_message.text) {
     campaign.isFillingCampaign(sender_psid, (is_filling, conversation) => {
-      if (is_filling !== "FINISHED"){
+      if (is_filling){
         responses = campaign.campaignResponse(received_message.text, sender_psid, conversation);
       }
       else{
