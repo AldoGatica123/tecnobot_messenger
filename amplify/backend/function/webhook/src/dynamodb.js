@@ -10,6 +10,7 @@ const savetoDB = (conversation)  => {
     TableName: process.env.TABLE_NAME,
     Item: conversation
   };
+
   client.put(params, (err, data) => {
     if (err) {
       console.log("Error", err);

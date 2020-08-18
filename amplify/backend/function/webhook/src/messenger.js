@@ -11,7 +11,7 @@ const handleMessage = (res, sender_psid, received_message) => {
         responses = campaign.campaignResponse(received_message.text, sender_psid, conversation);
       }
       else{
-        responses = responses_.handleResponse(received_message.text);
+        responses = responses_.notRecognized(received_message.text);
       }
       handleResponses(res, sender_psid, responses);
     });

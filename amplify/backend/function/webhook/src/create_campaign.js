@@ -24,8 +24,9 @@ const campaignResponse = (message, psid, conversation) => {
     conversation[current_field] = message;
     const next_field = getEmptyField(conversation);
     conversation["filling_data"] = next_field;
+    console.log("Updating " + JSON.stringify(conversation))
     dynamodb.savetoDB(conversation);
-    return responses_.nextFieldRequired(psid, message, current_field, next_field);
+    return responses_.nextFieldRequired(next_field);
   }
 }
 
@@ -35,7 +36,7 @@ const getEmptyField = (conversation) => {
   const fieldList = ["business_name", "marketing_package", "website", "phone", "location", "slogan", "description",
     "history", "search_terms"]
   Object.keys(fieldList).forEach(field => {
-    if (conversation[fieldList[field]] === "" && emptyField === undefined){
+    if (conversation[fieldList[field]].length === 0 && emptyField === "FINISHED"){
       console.log(fieldList[field] + " is empty");
       emptyField = fieldList[field];
     }
