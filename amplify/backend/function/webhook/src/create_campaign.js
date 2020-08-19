@@ -15,19 +15,13 @@ const initCampaign = (psid) => {
 
 const campaignResponse = (message, psid, conversation) => {
   const current_field = conversation.filling_data;
-  if (current_field === "FINISHED"){
-    console.log("Filling is over!");
-    return responses_.finishedCampaignQuestions();
-  }
-  else{
-    console.log("Saving " + message + " in " + current_field);
-    conversation[current_field] = message;
-    const next_field = getEmptyField(conversation);
-    conversation["filling_data"] = next_field;
-    console.log("Updating " + JSON.stringify(conversation))
-    dynamodb.savetoDB(conversation);
-    return responses_.nextFieldRequired(next_field);
-  }
+  console.log("Saving " + message + " in " + current_field);
+  conversation[current_field] = message;
+  const next_field = getEmptyField(conversation);
+  conversation["filling_data"] = next_field;
+  console.log("Updating " + JSON.stringify(conversation))
+  dynamodb.savetoDB(conversation);
+  return responses_.nextFieldRequired(next_field);
 }
 
 const getEmptyField = (conversation) => {

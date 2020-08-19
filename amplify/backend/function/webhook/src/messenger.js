@@ -1,17 +1,23 @@
 const request = require('request')
 const responses_ = require('./responses');
 const campaign = require('./create_campaign');
+const validations = require('./validations')
 
 const handleMessage = (res, sender_psid, received_message) => {
   let responses;
-
-  if (received_message.text) {
+  const message = received_message.text.trim();
+  if (message) {
     campaign.isFillingCampaign(sender_psid, (is_filling, conversation) => {
-      if (is_filling){
-        responses = campaign.campaignResponse(received_message.text, sender_psid, conversation);
+      if (conversation.filling_data !== "FINISHED") {
+        if (validations.validateMessage(message, conversation.filling_data)){
+          responses = campaign.campaignResponse(message, sender_psid, conversation);
+        }
+        else {
+          responses = responses_.errorInField(conversation.filling_data)
+        }
       }
-      else{
-        responses = responses_.notRecognized(received_message.text);
+      else {
+        responses = responses_.notRecognized(message);
       }
       handleResponses(res, sender_psid, responses);
     });
