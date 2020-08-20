@@ -42,7 +42,7 @@ const createConversation = (psid) => {
     TableName: process.env.TABLE_NAME,
     Item:{
       psid: psid,
-      filling_data: "business_name",
+      filling_data: "marketing_package",
       business_name: "",
       phone: "",
       website: "",

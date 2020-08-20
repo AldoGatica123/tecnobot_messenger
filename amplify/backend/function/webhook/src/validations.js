@@ -1,6 +1,8 @@
 
 const validateMessage = (message, field) => {
   switch (field) {
+    case 'marketing_package':
+      return validateMarketingPackage(message);
     case 'business_name':
       return validateBusinessName(message);
     case 'description':
@@ -8,8 +10,6 @@ const validateMessage = (message, field) => {
     case 'history':
       return true;
     case 'location':
-      return true;
-    case 'marketing_package':
       return true;
     case 'phone':
       return true;
@@ -22,10 +22,19 @@ const validateMessage = (message, field) => {
   }
 }
 
+const validateMarketingPackage = (message) => {
+
+}
+
+
+const validateDescription = (message) => {
+
+}
+
 const validateBusinessName = (message) => {
-  message = message.trim();
-  console.log("Business name: " + message)
+  console.log("Business name: '" + message + "'")
   return message.length < 30 && message.length > 2;
 }
+
 
 exports.validateMessage = validateMessage;
