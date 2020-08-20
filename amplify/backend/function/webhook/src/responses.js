@@ -84,7 +84,7 @@ const nextFieldRequired = (next_field) => {
     case 'website':
       return {text: "¡Gracias! ¿Cuál es el link hacia tu sitio web? (Si no tienes sitio web puedes utilizar el link de tu página de Facebook.)"}
     case 'location':
-      return {text: "¿En dónde se encuentra ubicado tu negocio? Esto nos sirve para poder segmentar tu campaña."}
+      return { text: "¿En dónde se encuentra ubicado tu negocio? Esto nos sirve para poder segmentar tu campaña.", quick_replies: countryList()};
     case 'phone':
       return {text: "Ingresa el número de teléfono para que puedas recibir llamadas de clientes interesados"}
     case 'search_terms':
@@ -100,6 +100,39 @@ const nextFieldRequired = (next_field) => {
   }
 }
 
+const countryList = () => {
+  return [
+      {
+        "content_type":"text",
+        "title":"Guatemala",
+        "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"Mexico",
+        "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"Honduras",
+        "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"El Salvador",
+        "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"Nicaragua",
+        "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"Costa Rica",
+        "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"Panamá",
+        "payload":"country",
+      }
+    ]
+}
 
 const errorInField = (field) => {
   console.log("Error in field: " + field)
@@ -107,11 +140,11 @@ const errorInField = (field) => {
     case 'business_name':
       return {text: "Esperamos que el nombre de la empresa sea entre 3 a 15 letras."}
     case 'marketing_package':
-      return {text: "Por favor, elige uno de los paquetes de marketing. Si quieres cambiar el paquete elegido comunicate con un asesor."}
+      return {text: "Si deseas cambiar el combo de marketing elegido comunicate con un asesor."}
     case 'website':
       return {text: "Por favor, revisa que hayas escrito bien tu sitio web."}
     case 'location':
-      return {text: "Por favor, elige una de las posibles ubicaciones."}
+      return {text: "Por favor, elige una de las posibles ubicaciones.", quick_replies: countryList()}
     case 'phone':
       return {text: "Esperamos que el número de teléfono sea de 8 dígitos."}
     case 'search_terms':
@@ -195,6 +228,10 @@ const marketingCombos = () => {
   }
 }
 
+const conversationExists = () => {
+  return {text: "Actualmente hay datos de una campaña previa creada. Si quieres hacer un cambio comunicate con un asesor."}
+}
+
 exports.errorInField = errorInField;
 exports.initCampaign = initCampaign;
 exports.talkHuman = talkHuman;
@@ -203,4 +240,5 @@ exports.welcomeMessage = welcomeMessage;
 exports.notRecognized = notRecognized;
 exports.completePayment = completePayment;
 exports.nextFieldRequired = nextFieldRequired;
+exports.conversationExists = conversationExists;
 exports.finishedCampaignQuestions = finishedCampaignQuestions;

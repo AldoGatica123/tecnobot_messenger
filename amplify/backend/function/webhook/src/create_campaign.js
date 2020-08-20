@@ -1,14 +1,16 @@
 const dynamodb = require('./dynamodb')
 const responses_ = require('./responses')
 
-const initCampaign = (psid) => {
+const initCampaign = (psid, callback) => {
   dynamodb.getConversation(psid, (err, item) => {
     if (item) {
       console.log("Conversation already exists")
+      callback(true);
     }
     else {
       console.log("Creating new conversation " + psid);
       dynamodb.createConversation(psid);
+      callback(false);
     }
   });
 }
@@ -43,16 +45,16 @@ const isFillingCampaign = (psid, callback) => {
     if (item) {
       if (item.filling_data){
         console.log("Conversation data exists");
-        callback(true, item);
+        callback(item);
       }
       else {
         console.log("Ignore message")
-        callback(false, null)
+        callback(null)
       }
     }
     else {
       console.log("Conversation does not exist")
-      callback(false, null)
+      callback(null)
     }
   });
 }

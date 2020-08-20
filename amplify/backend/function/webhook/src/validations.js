@@ -1,38 +1,40 @@
 
 const validateMessage = (message, field) => {
   switch (field) {
-    case 'marketing_package':
-      return validateMarketingPackage(message);
     case 'business_name':
-      return validateBusinessName(message);
     case 'description':
-      return true;
     case 'history':
-      return true;
+    case 'slogan':
+      return validateLength(message);
     case 'location':
-      return true;
+      return validateLocation(message);
     case 'phone':
-      return true;
+      return validatePhone(message);
     case 'search_terms':
       return true;
-    case 'slogan':
-      return true;
     case 'website':
-      return true;
+      return validateWebsite(message);
+    default:
+      return false;
   }
 }
 
-const validateMarketingPackage = (message) => {
-
+const validateWebsite = (message) => {
+  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm
+  return pattern.test(message)
 }
 
-
-const validateDescription = (message) => {
-
+const validatePhone = (message) => {
+  const pattern = /^([0-9]{8})*$/gm
+  return pattern.test(message)
 }
 
-const validateBusinessName = (message) => {
-  console.log("Business name: '" + message + "'")
+const validateLocation = (message) => {
+  const countries = ['Mexico', 'Guatemala', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panamá'];
+  return countries.includes(message);
+}
+
+const validateLength = (message) => {
   return message.length < 30 && message.length > 2;
 }
 

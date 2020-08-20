@@ -7,7 +7,7 @@ const handleMessage = (res, sender_psid, received_message) => {
   let responses;
   const message = received_message.text.trim();
   if (message) {
-    campaign.isFillingCampaign(sender_psid, (is_filling, conversation) => {
+    campaign.isFillingCampaign(sender_psid, (conversation) => {
       if (conversation.filling_data !== "FINISHED" && conversation.filling_data !== "marketing_package") {
         if (validations.validateMessage(message, conversation.filling_data)){
           responses = campaign.campaignResponse(message, sender_psid, conversation);
@@ -40,8 +40,15 @@ const handlePostback = (res, sender_psid, received_postback) => {
       responses = responses_.talkHuman();
       break;
     case 'init_campaign':
-      campaign.initCampaign(sender_psid);
-      responses = responses_.initCampaign();
+      campaign.initCampaign(sender_psid, (exists) => {
+        if (!exists){
+          responses = responses_.initCampaign();
+        }
+        else{
+          responses = responses_.conversationExists();
+        }
+        handleResponses(res, sender_psid, responses);
+      });
       break;
     case 'complete_payment':
       responses = responses_.completePayment();
@@ -49,9 +56,9 @@ const handlePostback = (res, sender_psid, received_postback) => {
     case 'choose_package_1':
     case 'choose_package_2':
     case 'choose_package_3':
-      campaign.isFillingCampaign(sender_psid, (is_filling, conversation) => {
+      campaign.isFillingCampaign(sender_psid, (conversation) => {
         if (conversation.filling_data !== "FINISHED") {
-          if (validations.validateMessage(payload, 'marketing_package') && conversation.marketing_package.length === 0){
+          if (conversation.marketing_package.length === 0){
             conversation['filling_data'] = 'marketing_package';
             responses = campaign.campaignResponse(payload, sender_psid, conversation);
           }
