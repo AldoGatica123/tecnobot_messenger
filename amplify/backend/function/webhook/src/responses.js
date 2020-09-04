@@ -17,12 +17,12 @@ const welcomeMessage = () => {
           },
           {
             type: "postback",
-            title: "Crear campaña de publicidad",
+            title: "Crear campaña",
             payload: "init_campaign"
           },
           {
             type: "postback",
-            title: "Pagar una campaña de publicidad",
+            title: "Pagar publicidad",
             payload: "complete_payment"
           },
         ]
@@ -46,12 +46,12 @@ const helpMessage = () => {
             },
             {
               type: "postback",
-              title: "Crear campaña de publicidad",
+              title: "Crear campaña",
               payload: "init_campaign"
             },
             {
               type: "postback",
-              title: "Pagar una campaña de publicidad",
+              title: "Pagar publicidad",
               payload: "complete_payment"
             },
         ]

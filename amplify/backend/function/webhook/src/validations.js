@@ -3,9 +3,10 @@ const validateMessage = (message, field) => {
   switch (field) {
     case 'business_name':
     case 'description':
-    case 'history':
     case 'slogan':
-      return validateLength(message);
+      return validateLength(message, 30);
+    case 'history':
+      return validateLength(message, 90)
     case 'location':
       return validateLocation(message);
     case 'phone':
@@ -33,12 +34,12 @@ const validatePhone = (message) => {
 }
 
 const validateLocation = (message) => {
-  const countries = ['Mexico', 'Guatemala', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panamá'];
+  const countries = ['Mexico', 'Guatemala', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panamá', 'Colombia'];
   return countries.includes(message);
 }
 
-const validateLength = (message) => {
-  return message.length < 30 && message.length > 2;
+const validateLength = (message, length) => {
+  return message.length < length && message.length > 2;
 }
 
 
