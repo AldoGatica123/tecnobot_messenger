@@ -40,12 +40,12 @@ const handlePostback = (res, sender_psid, received_postback) => {
       responses = responses_.talkHuman();
       break;
     case 'init_campaign':
-      campaign.initCampaign(sender_psid, (exists) => {
-        if (!exists){
+      campaign.initCampaign(sender_psid, (item) => {
+        if (item === null) {
           responses = responses_.initCampaign();
         }
-        else{
-          responses = responses_.conversationExists();
+        else {
+          responses = responses_.conversationExists(item.filling_data);
         }
         handleResponses(res, sender_psid, responses);
       });

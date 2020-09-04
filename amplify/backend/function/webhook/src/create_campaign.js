@@ -5,12 +5,12 @@ const initCampaign = (psid, callback) => {
   dynamodb.getConversation(psid, (err, item) => {
     if (item) {
       console.log("Conversation already exists")
-      callback(true);
+      callback(item);
     }
     else {
       console.log("Creating new conversation " + psid);
       dynamodb.createConversation(psid);
-      callback(false);
+      callback(null);
     }
   });
 }
@@ -23,7 +23,7 @@ const campaignResponse = (message, psid, conversation) => {
   conversation["filling_data"] = next_field;
   console.log("Updating " + JSON.stringify(conversation))
   dynamodb.savetoDB(conversation);
-  return responses_.nextFieldRequired(next_field);
+  return responses_.nextFieldRequired(next_field, conversation.marketing_package);
 }
 
 const getEmptyField = (conversation) => {

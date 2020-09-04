@@ -20,11 +20,14 @@ const validateMessage = (message, field) => {
 }
 
 const validateWebsite = (message) => {
+  message = message.toLowerCase();
   const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm
   return pattern.test(message)
 }
 
 const validatePhone = (message) => {
+  message = message.replace('-','');
+  message = message.replace(' ','');
   const pattern = /^([0-9]{8})*$/gm
   return pattern.test(message)
 }

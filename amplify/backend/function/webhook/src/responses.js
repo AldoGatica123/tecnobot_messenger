@@ -8,21 +8,21 @@ const welcomeMessage = () => {
       type: "template",
       payload: {
         template_type: "button",
-        text: "¡Hola, bienvenido a Tecnobot! El Sistema automatizado para que puedas comenzar a realizar publicidad en medios digitales",
+        text: "¡Hola, bienvenido al Sistema automatizado para que crear campañas publicitarias en medios digitales.",
         buttons: [
           {
             type: "postback",
-            title: "Hablar con un humano",
+            title: "Hablar con un asesor",
             payload: "talk_human"
           },
           {
             type: "postback",
-            title: "Iniciar campaña",
+            title: "Crear campaña de publicidad",
             payload: "init_campaign"
           },
           {
             type: "postback",
-            title: "Pagar campaña",
+            title: "Pagar una campaña de publicidad",
             payload: "complete_payment"
           },
         ]
@@ -39,21 +39,21 @@ const helpMessage = () => {
         template_type: "button",
           text: "Te puedo asistir con las siguientes opciones:",
           buttons: [
-          {
-            type: "postback",
-            title: "Hablar con un humano",
-            payload: "talk_human"
-          },
-          {
-            type: "postback",
-            title: "Iniciar campaña",
-            payload: "init_campaign"
-          },
-          {
-            type: "postback",
-            title: "Pagar campaña",
-            payload: "complete_payment"
-          },
+            {
+              type: "postback",
+              title: "Hablar con un asesor",
+              payload: "talk_human"
+            },
+            {
+              type: "postback",
+              title: "Crear campaña de publicidad",
+              payload: "init_campaign"
+            },
+            {
+              type: "postback",
+              title: "Pagar una campaña de publicidad",
+              payload: "complete_payment"
+            },
         ]
       }
     }
@@ -62,7 +62,7 @@ const helpMessage = () => {
 
 const initCampaign = () => {
   return [{
-    text: "Para comenzar a hacer publicidad, primero necesitamos saber en qué paquete de marketing digital te interesa."
+    text: "Por favor selecciona el paquete que mejor se adapte a tu presupuesto de publicidad."
   }, marketingCombos()]
 }
 
@@ -74,13 +74,13 @@ const completePayment = () => {
   return { text: "Cuál es tu número de transacción?" }
 }
 
-const nextFieldRequired = (next_field) => {
+const nextFieldRequired = (next_field, marketing_package) => {
   console.log("Next field: " + next_field)
   switch (next_field) {
     case 'marketing_package':
-      return [{text: "¿Qué combo de marketing digital te interesa"}, marketingCombos()]
+      return [{text: "Por favor selecciona el paquete que mejor se adapte a tu presupuesto de publicidad."}, marketingCombos()]
     case 'business_name':
-      return {text: "También necesitamos conocer tu negocio. ¿Cuál es el nombre de tu empresa?"}
+      return {text: "Para comenzar necesitamos información de tu negocio. ¿Cuál es el nombre de tu empresa?"}
     case 'website':
       return {text: "¡Gracias! ¿Cuál es el link hacia tu sitio web? (Si no tienes sitio web puedes utilizar el link de tu página de Facebook.)"}
     case 'location':
@@ -94,9 +94,9 @@ const nextFieldRequired = (next_field) => {
     case 'slogan':
       return {text: "¿Cuál es el slogan o frase de tu negocio? Necesitamos que sea menos de 30 caracteres"}
     case 'history':
-      return {text: "Excelente. Para finalizar necesitamos que nos cuentes un poco más de tu negocio, como información de tu historia y a que se dedican."}
+      return {text: "Cuéntanos la historia de tu negocio en menos de 90 caracteres"}
     case 'FINISHED':
-      return finishedCampaignQuestions();
+      return finishedCampaignQuestions(marketing_package);
   }
 }
 
@@ -130,6 +130,10 @@ const countryList = () => {
         "content_type":"text",
         "title":"Panamá",
         "payload":"country",
+      },{
+        "content_type":"text",
+        "title":"Colombia",
+        "payload":"country",
       }
     ]
 }
@@ -150,18 +154,30 @@ const errorInField = (field) => {
     case 'search_terms':
       return {text: "¿Cuáles son los servicios o productos principales de tu empresa?"}
     case 'description':
-      return {text: "Perfecto, ahora necesito que puedas darnos una pequeña descripción de tu negocio en menos de 30 caracteres."}
+      return {text: "Por favor, revisa que la descripción de tu negocio sea menor a 30 caracteres."}
     case 'slogan':
-      return {text: "¿Cuál es el slogan o frase de tu negocio? Necesitamos que sea menos de 30 caracteres"}
+      return {text: "Por favor, revisa que el slogan de tu negocio sea menor a 30 caracteres."}
     case 'history':
-      return {text: "Excelente. Para finalizar necesitamos que nos cuentes un poco más de tu negocio, como información de tu historia y a que se dedican."}
+      return {text: "Por favor, revisa que la historia de tu negocio sea menor 90 caracteres."}
   }
 }
 
-const finishedCampaignQuestions = () => {
+const finishedCampaignQuestions = (marketing_package) => {
+  let payment_link = '';
+  switch (marketing_package) {
+    case 'choose_package_1':
+      payment_link = 'http://sf.pago.ai/tecnometro-sa?token=ZDN0bKIV9o';
+      break;
+    case 'choose_package_2':
+      payment_link = 'http://sf.pago.ai/tecnometro-sa?token=4D9OWIINSq';
+      break;
+    case 'choose_package_3':
+      payment_link = 'http://sf.pago.ai/tecnometro-sa?token=C7wNrrAcR8';
+      break;
+  }
   return [{text: "Muchas gracias por la información. ¡Estamos listos para lanzar tu campaña publicitaria! " +
-      "Por último necesitamos que ingreses al siguiente enlace para ingresar tu método de pago y tu campaña publicitaria iniciará."},
-    {text: "¡Eso sería todo! Si tienes alguna duda o pregunta puedes comunicarte directamente con nuestro equipo a info@tecnometro.net o puedes escribirnos a (502) 3517-7047"}];
+      "Ingresa al siguiente enlace para realizar el pago de tu campaña publicitaria: " + payment_link},
+    {text: "Una vez hayas realizado el pago, pega el número de transacción que recibirás por correo electrónico."}];
 }
 
 const marketingCombos = () => {
@@ -228,8 +244,41 @@ const marketingCombos = () => {
   }
 }
 
-const conversationExists = () => {
-  return {text: "Actualmente hay datos de una campaña previa creada. Si quieres hacer un cambio comunicate con un asesor."}
+const conversationExists = (pending_data) => {
+  console.log('Pending: ' + pending_data);
+  let responses = [{text: "Actualmente hay datos de una campaña previa creada. Si quieres hacer un cambio comunicate con un asesor."}]
+  switch (pending_data) {
+    case 'business_name':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa el nombre de tu empresa"})
+      break;
+    case 'marketing_package':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa el combo de marketing"})
+      responses.push(marketingCombos())
+      break;
+    case 'website':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa tu sitio web"})
+      break;
+    case 'location':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa una de las posibles ubicaciones.",
+        quick_replies: countryList()})
+      break;
+    case 'phone':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa tu número de teléfono"})
+      break;
+    case 'search_terms':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa los servicios o productos principales de tu empresa"})
+      break;
+    case 'description':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa una pequeña descripción de tu negocio en menos de 30 caracteres."})
+      break;
+    case 'slogan':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa el slogan de tu negocio"})
+      break;
+    case 'history':
+      responses.push({text: "Si deseas seguir con con la campaña actual, ingresa la historia de tu negocio"})
+      break;
+  }
+  return responses;
 }
 
 exports.errorInField = errorInField;
