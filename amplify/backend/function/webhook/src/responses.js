@@ -95,7 +95,7 @@ const nextFieldRequired = (next_field, marketing_package) => {
       return {text: "¿Cuál es el slogan o frase de tu negocio? Necesitamos que sea menos de 30 caracteres"}
     case 'history':
       return {text: "Cuéntanos la historia de tu negocio en menos de 90 caracteres"}
-    case 'FINISHED':
+    case 'transaction_number':
       return finishedCampaignQuestions(marketing_package);
   }
 }
@@ -165,18 +165,18 @@ const errorInField = (field) => {
 const finishedCampaignQuestions = (marketing_package) => {
   let payment_link = '';
   switch (marketing_package) {
-    case 'choose_package_1':
+    case 'MARKETING_COMBO_1':
       payment_link = 'http://sf.pago.ai/tecnometro-sa?token=ZDN0bKIV9o';
       break;
-    case 'choose_package_2':
+    case 'MARKETING_COMBO_2':
       payment_link = 'http://sf.pago.ai/tecnometro-sa?token=4D9OWIINSq';
       break;
-    case 'choose_package_3':
+    case 'MARKETING_COMBO_3':
       payment_link = 'http://sf.pago.ai/tecnometro-sa?token=C7wNrrAcR8';
       break;
   }
   return [{text: "Muchas gracias por la información. ¡Estamos listos para lanzar tu campaña publicitaria! " +
-      "Ingresa al siguiente enlace para realizar el pago de tu campaña publicitaria: " + payment_link},
+      "Ingresa al siguiente enlace para realizar el pago de tu campaña publicitaria:"}, {text: payment_link},
     {text: "Una vez hayas realizado el pago, pega el número de transacción que recibirás por correo electrónico."}];
 }
 
@@ -195,7 +195,7 @@ const marketingCombos = () => {
               {
                 "type":"postback",
                 "title":"Quiero el combo 1",
-                "payload":"choose_package_1"
+                "payload":"MARKETING_COMBO_1"
               },
               {
                 "type":"postback",
@@ -212,7 +212,7 @@ const marketingCombos = () => {
               {
                 "type":"postback",
                 "title":"Quiero el combo 2",
-                "payload":"choose_package_2"
+                "payload":"MARKETING_COMBO_2"
               },
               {
                 "type":"postback",
@@ -229,7 +229,7 @@ const marketingCombos = () => {
               {
                 "type":"postback",
                 "title":"Quiero el combo 3",
-                "payload":"choose_package_3"
+                "payload":"MARKETING_COMBO_3"
               },
               {
                 "type":"postback",

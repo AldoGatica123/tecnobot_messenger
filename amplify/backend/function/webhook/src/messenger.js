@@ -8,7 +8,7 @@ const handleMessage = (res, sender_psid, received_message) => {
   const message = received_message.text.trim();
   if (message) {
     campaign.isFillingCampaign(sender_psid, (conversation) => {
-      if (conversation.filling_data !== "FINISHED" && conversation.filling_data !== "marketing_package") {
+      if (conversation.filling_data !== "transaction_number" && conversation.filling_data !== "marketing_package") {
         if (validations.validateMessage(message, conversation.filling_data)){
           responses = campaign.campaignResponse(message, sender_psid, conversation);
         }
@@ -53,11 +53,11 @@ const handlePostback = (res, sender_psid, received_postback) => {
     case 'complete_payment':
       responses = responses_.completePayment();
       break;
-    case 'choose_package_1':
-    case 'choose_package_2':
-    case 'choose_package_3':
+    case 'MARKETING_COMBO_1':
+    case 'MARKETING_COMBO_2':
+    case 'MARKETING_COMBO_3':
       campaign.isFillingCampaign(sender_psid, (conversation) => {
-        if (conversation.filling_data !== "FINISHED") {
+        if (conversation.filling_data !== "transaction_number") {
           if (conversation.marketing_package.length === 0){
             conversation['filling_data'] = 'marketing_package';
             responses = campaign.campaignResponse(payload, sender_psid, conversation);

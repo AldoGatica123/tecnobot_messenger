@@ -28,11 +28,11 @@ const campaignResponse = (message, psid, conversation) => {
 
 const getEmptyField = (conversation) => {
   console.log("Checking fields: " + JSON.stringify(conversation));
-  let emptyField = "FINISHED";
+  let emptyField = "transaction_number";
   const fieldList = ["marketing_package", "business_name", "website", "phone", "location", "slogan", "description",
     "history", "search_terms"]
   Object.keys(fieldList).forEach(field => {
-    if (conversation[fieldList[field]].length === 0 && emptyField === "FINISHED"){
+    if (conversation[fieldList[field]].length === 0 && emptyField === "transaction_number"){
       console.log(fieldList[field] + " is empty");
       emptyField = fieldList[field];
     }
