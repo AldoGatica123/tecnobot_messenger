@@ -11,8 +11,7 @@ const handleMessage = (res, sender_psid, received_message) => {
       if (conversation.filling_data === "transaction_number"){
         validations.validateTransactionNumber(message, (valid) => {
           if (valid){
-            conversation.transaction_number = message;
-            responses = campaign.acceptPayment(conversation);
+            responses = campaign.acceptPayment(conversation, message);
           }
           else{
             responses = responses_.invalidPayment();
