@@ -8,18 +8,33 @@ const handleMessage = (res, sender_psid, received_message) => {
   const message = received_message.text.trim();
   if (message) {
     campaign.isFillingCampaign(sender_psid, (conversation) => {
-      if (conversation.filling_data !== "transaction_number" && conversation.filling_data !== "marketing_package") {
-        if (validations.validateMessage(message, conversation.filling_data)){
-          responses = campaign.campaignResponse(message, sender_psid, conversation);
+      if (conversation.filling_data === "transaction_number"){
+        validations.validateTransactionNumber(message, (valid) => {
+          if (valid){
+            conversation.transaction_number = message;
+            responses = campaign.acceptPayment(conversation);
+          }
+          else{
+            responses = responses_.invalidPayment();
+          }
+          handleResponses(res, sender_psid, responses);
+        })
+      }
+      else{
+        if (conversation.filling_data !== "FINISHED" && conversation.filling_data !== "marketing_package") {
+          if (validations.validateMessage(message, conversation.filling_data)){
+            responses = campaign.campaignResponse(message, sender_psid, conversation);
+          }
+          else {
+            responses = responses_.errorInField(conversation.filling_data)
+          }
         }
         else {
-          responses = responses_.errorInField(conversation.filling_data)
+          responses = responses_.notRecognized(message);
         }
+        handleResponses(res, sender_psid, responses);
       }
-      else {
-        responses = responses_.notRecognized(message);
-      }
-      handleResponses(res, sender_psid, responses);
+
     });
   }
 }

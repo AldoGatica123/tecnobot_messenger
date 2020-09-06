@@ -59,6 +59,12 @@ const isFillingCampaign = (psid, callback) => {
   });
 }
 
+const acceptPayment = (conversation) => {
+  dynamodb.savetoDB(conversation);
+  return responses_.validPayment();
+}
+
 exports.initCampaign = initCampaign;
 exports.isFillingCampaign = isFillingCampaign;
 exports.campaignResponse = campaignResponse;
+exports.acceptPayment = acceptPayment;

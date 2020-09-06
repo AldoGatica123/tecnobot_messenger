@@ -159,6 +159,8 @@ const errorInField = (field) => {
       return {text: "Por favor, revisa que el slogan de tu negocio sea menor a 30 caracteres."}
     case 'history':
       return {text: "Por favor, revisa que la historia de tu negocio sea menor 90 caracteres."}
+    case 'transaction_number':
+      return {text: "Tu número de transacción no es válido."}
   }
 }
 
@@ -281,13 +283,26 @@ const conversationExists = (pending_data) => {
   return responses;
 }
 
-exports.errorInField = errorInField;
+const validPayment = () => {
+  return [{text: "¡Eso sería todo! Tu campaña publicitaria está en proceso de lanzamiento. Pronto comenzarás a recibir visitas a tu sitio web y llamadas a tu negocio."},
+    {text: "Si tienes alguna duda o pregunta puedes comunicarte directamente con nuestro equipo a info@tecnometro.net o puedes escribirnos a (502) 3517-7047"}];
+}
+
+const invalidPayment = () => {
+  return [{text: "Su número de transacción es incorrecto. Por favor, chequee que esté bien escrito"}]
+}
+
+exports.notRecognized = notRecognized;
+exports.welcomeMessage = welcomeMessage;
+exports.helpMessage = helpMessage;
 exports.initCampaign = initCampaign;
 exports.talkHuman = talkHuman;
-exports.helpMessage = helpMessage;
-exports.welcomeMessage = welcomeMessage;
-exports.notRecognized = notRecognized;
 exports.completePayment = completePayment;
 exports.nextFieldRequired = nextFieldRequired;
-exports.conversationExists = conversationExists;
+exports.countryList = countryList;
+exports.errorInField = errorInField;
 exports.finishedCampaignQuestions = finishedCampaignQuestions;
+exports.marketingCombos = marketingCombos;
+exports.conversationExists = conversationExists;
+exports.validPayment = validPayment;
+exports.invalidPayment = invalidPayment;

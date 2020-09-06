@@ -52,6 +52,7 @@ const createConversation = (psid) => {
       location: "",
       search_terms: "",
       marketing_package: "",
+      transaction_number: "",
     }
   };
 
