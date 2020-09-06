@@ -13,7 +13,7 @@
 "greeting": [
     {
       "locale":"default",
-      "text":"Hola {{user_first_name}}! Soy tecnobot" 
+      "text":"Hola {{user_first_name}}! Soy tecnobot, te puedo ayudar a iniciar campañas de marketing digital!" 
     }
   ]
 ```
@@ -24,12 +24,13 @@
 "ice_breakers":[
      {
         "question": "Quisiera iniciar una campaña de marketing",
-        "payload": "INIT_CAMPAIGN",
+        "payload": "init_campaign",
      },
      {
-        "question": "Quiero completar un pago",
-        "payload": "COMPLETE_PAYMENT",
+        "question": "Quiero hablar con un asesor",
+        "payload": "talk_human",
      }
+]
 ```
 
 # Persistent menu
@@ -43,12 +44,12 @@
                 {
                     "type": "postback",
                     "title": "Iniciar campaña de marketing",
-                    "payload": "INIT_CAMPAIGN"
+                    "payload": "init_campaign"
                 },
                 {
                     "type": "postback",
-                    "title": "Completar pago",
-                    "payload": "COMPLETE_PAYMENT"
+                    "title": "Hablar con un asesor",
+                    "payload": "talk_human"
                 },
                 {
                     "type": "web_url",

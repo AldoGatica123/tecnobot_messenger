@@ -20,11 +20,6 @@ const welcomeMessage = () => {
             title: "Crear campaña",
             payload: "init_campaign"
           },
-          {
-            type: "postback",
-            title: "Pagar publicidad",
-            payload: "complete_payment"
-          },
         ]
       }
     }
@@ -48,11 +43,6 @@ const helpMessage = () => {
               type: "postback",
               title: "Crear campaña",
               payload: "init_campaign"
-            },
-            {
-              type: "postback",
-              title: "Pagar publicidad",
-              payload: "complete_payment"
             },
         ]
       }
@@ -279,6 +269,9 @@ const conversationExists = (pending_data) => {
     case 'history':
       responses.push({text: "Si deseas seguir con con la campaña actual, ingresa la historia de tu negocio"})
       break;
+    case 'transaction_number':
+      responses.push({text: "Para completar la campaña, ingresa el número de transacción que está en el correo electrónico que recibes después de hacer la compra"})
+      break;
   }
   return responses;
 }
@@ -289,7 +282,8 @@ const validPayment = () => {
 }
 
 const invalidPayment = () => {
-  return [{text: "Su número de transacción es incorrecto. Por favor, chequee que esté bien escrito"}]
+  return [{text: "Su número de transacción es incorrecto. Por favor, chequee que esté bien escrito"},
+    {text: "Si el problema persiste, escribenos a (502) 3517-7047"}]
 }
 
 exports.notRecognized = notRecognized;

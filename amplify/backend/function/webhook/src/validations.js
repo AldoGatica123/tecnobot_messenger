@@ -1,5 +1,10 @@
 const axios = require('axios');
 
+const headers = {
+  'x-api-key': process.env.API_KEY,
+  'Content-Type': 'application/json'
+  }
+
 const validateMessage = (message, field) => {
   switch (field) {
     case 'business_name':
@@ -23,8 +28,11 @@ const validateMessage = (message, field) => {
 
 const validateTransactionNumber = (transaction_number, callback) => {
   console.log("Making call")
-  axios.post('https://2swpoc4hc4.execute-api.us-east-1.amazonaws.com/api/payment', {
+  axios.post('https://2swpoc4hc4.execute-api.us-east-1.amazonaws.com/api/payment',
+    {
     transaction_number: transaction_number
+  }, {
+    headers: headers
   }).then( (response) => {
     console.log(response.data);
     if (response.status === 201){
