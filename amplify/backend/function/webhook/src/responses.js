@@ -3,27 +3,8 @@ const notRecognized = (message) => {
 }
 
 const welcomeMessage = () => {
-  return {
-    attachment: {
-      type: "template",
-      payload: {
-        template_type: "button",
-        text: "¡Hola, bienvenido al Sistema automatizado para que crear campañas publicitarias en medios digitales.",
-        buttons: [
-          {
-            type: "postback",
-            title: "Hablar con un asesor",
-            payload: "talk_human"
-          },
-          {
-            type: "postback",
-            title: "Crear campaña",
-            payload: "init_campaign"
-          },
-        ]
-      }
-    }
-  }
+  return [{text: "¡Hola, bienvenido al Sistema automatizado para que crear campañas publicitarias en medios digitales."},
+  helpMessage()]
 }
 
 const helpMessage = () => {
@@ -58,6 +39,10 @@ const initCampaign = () => {
 
 const talkHuman = () => {
   return { text: "Por favor indicanos tu nombre, número de teléfono y correo electrónico para que un asesor se pueda comunicar contigo." }
+}
+
+const alreadyHuman = () => {
+  return { text: "Nuestro asesor se comunicará pronto contigo"}
 }
 
 const completePayment = () => {
@@ -291,6 +276,7 @@ exports.welcomeMessage = welcomeMessage;
 exports.helpMessage = helpMessage;
 exports.initCampaign = initCampaign;
 exports.talkHuman = talkHuman;
+exports.alreadyHuman = alreadyHuman;
 exports.completePayment = completePayment;
 exports.nextFieldRequired = nextFieldRequired;
 exports.countryList = countryList;

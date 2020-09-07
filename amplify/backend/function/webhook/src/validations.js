@@ -33,15 +33,28 @@ const validateTransactionNumber = (transaction_number, callback) => {
     transaction_number: transaction_number
   }, {
     headers: headers
-  }).then( (response) => {
+  }).then((response) => {
     console.log(response.data);
     if (response.status === 201){
       callback(true);
     }
-  }).catch( (error) => {
+  }).catch((error) => {
     console.log(error.data)
       callback(false);
   })
+}
+
+const talkToHuman = (callback) => {
+  axios.post('https://graph.facebook.com/v2.6/me/pass_thread_control?access_token=' + process.env.PAGE_ACCESS_TOKEN,
+    {recipient:{id:"4078025715601492"},target_app_id:263902037430900})
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      callback(true);
+    })
+    .catch((error) => {
+      console.log(error);
+      callback(false);
+    });
 }
 
 const validateWebsite = (message) => {
@@ -69,3 +82,4 @@ const validateLength = (message, length) => {
 
 exports.validateMessage = validateMessage;
 exports.validateTransactionNumber = validateTransactionNumber;
+exports.talkToHuman = talkToHuman;

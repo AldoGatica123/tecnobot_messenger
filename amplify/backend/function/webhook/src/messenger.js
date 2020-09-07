@@ -51,7 +51,15 @@ const handlePostback = (res, sender_psid, received_postback) => {
       responses = responses_.helpMessage();
       break;
     case 'talk_human':
-      responses = responses_.talkHuman();
+      validations.talkToHuman((humanTalking) => {
+        if (humanTalking) {
+          responses = responses_.talkHuman();
+        }
+        else {
+          responses = responses_.alreadyHuman();
+        }
+        handleResponses(res, sender_psid, responses);
+      });
       break;
     case 'init_campaign':
       campaign.initCampaign(sender_psid, (item) => {

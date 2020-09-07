@@ -62,6 +62,7 @@ const isFillingCampaign = (psid, callback) => {
 const acceptPayment = (conversation, transaction_number) => {
   conversation.transaction_number = transaction_number;
   conversation.filling_data = "FINISHED";
+
   dynamodb.savetoDB(conversation);
   return responses_.validPayment();
 }
