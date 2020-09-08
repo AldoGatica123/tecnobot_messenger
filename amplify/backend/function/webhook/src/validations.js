@@ -27,28 +27,47 @@ const validateMessage = (message, field) => {
 }
 
 const validateTransactionNumber = (transaction_number, callback) => {
-  console.log("Making call")
+  console.log("Checking transaction number")
   axios.post('https://2swpoc4hc4.execute-api.us-east-1.amazonaws.com/api/payment',
     {
     transaction_number: transaction_number
   }, {
     headers: headers
   }).then((response) => {
-    console.log(response.data);
+    console.log("Response: " + JSON.stringify(response.data));
     if (response.status === 201){
       callback(true);
     }
   }).catch((error) => {
-    console.log(error.data)
+    console.log("Error: " + error)
       callback(false);
   })
 }
 
+const startNewCampaign = (conversation, callback) => {
+  console.log("Starting new campaign")
+  console.log("Payload: " + JSON.stringify(conversation))
+  axios.post('https://oe5ye2mdwj.execute-api.us-east-1.amazonaws.com/api/adwords',
+    conversation
+    , {
+      headers: headers
+    }).then((response) => {
+    console.log("Response: " + JSON.stringify(response.data));
+    if (response.status === 201){
+      callback(true);
+    }
+  }).catch((error) => {
+    console.log("Error: " + error)
+    callback(false);
+  })
+}
+
 const talkToHuman = (callback) => {
+  console.log("Handover to inbox")
   axios.post('https://graph.facebook.com/v2.6/me/pass_thread_control?access_token=' + process.env.PAGE_ACCESS_TOKEN,
     {recipient:{id:"4078025715601492"},target_app_id:263902037430900})
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      console.log("Response: " + JSON.stringify(response.data));
       callback(true);
     })
     .catch((error) => {
@@ -83,3 +102,4 @@ const validateLength = (message, length) => {
 exports.validateMessage = validateMessage;
 exports.validateTransactionNumber = validateTransactionNumber;
 exports.talkToHuman = talkToHuman;
+exports.startNewCampaign = startNewCampaign;

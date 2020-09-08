@@ -8,9 +8,10 @@ const handleMessage = (res, sender_psid, received_message) => {
   const message = received_message.text.trim();
   if (message) {
     campaign.isFillingCampaign(sender_psid, (conversation) => {
-      if (conversation.filling_data === "transaction_number"){
+      if (conversation.filling_data === "transaction_number") {
         validations.validateTransactionNumber(message, (valid) => {
           if (valid){
+            validations.startNewCampaign(conversation, (success) => {});
             responses = campaign.acceptPayment(conversation, message);
           }
           else{
