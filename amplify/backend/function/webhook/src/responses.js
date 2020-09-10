@@ -175,9 +175,9 @@ const marketingCombos = () => {
                 "payload":"MARKETING_COMBO_1"
               },
               {
-                "type":"postback",
+                "type":"web_url",
+                "url":"https://www.tecnometro.net/producto/combo-google-ads-1/",
                 "title":"Más información",
-                "payload":"info_package_1"
               }
             ]
           },
@@ -192,9 +192,9 @@ const marketingCombos = () => {
                 "payload":"MARKETING_COMBO_2"
               },
               {
-                "type":"postback",
+                "type":"web_url",
+                "url":"https://www.tecnometro.net/producto/combo-google-ads-2/",
                 "title":"Más información",
-                "payload":"info_package_2"
               }
             ]
           },
@@ -209,9 +209,9 @@ const marketingCombos = () => {
                 "payload":"MARKETING_COMBO_3"
               },
               {
-                "type":"postback",
+                "type":"web_url",
+                "url":"https://www.tecnometro.net/producto/combo-google-ads-3/",
                 "title":"Más información",
-                "payload":"info_package_3"
               }
             ]
           }

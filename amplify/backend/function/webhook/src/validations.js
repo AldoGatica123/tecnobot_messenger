@@ -62,10 +62,24 @@ const startNewCampaign = (conversation, callback) => {
   })
 }
 
-const talkToHuman = (callback) => {
+const talkToBot = (psid, callback) => {
+  console.log("Handover to tecnobot")
+  axios.post('https://graph.facebook.com/v2.6/me/take_thread_control?access_token=' + process.env.PAGE_ACCESS_TOKEN,
+    {recipient:{id:psid}})
+    .then((response) => {
+      console.log("Response: " + JSON.stringify(response.data));
+      callback(true);
+    })
+    .catch((error) => {
+      console.log(error);
+      callback(false);
+    });
+}
+
+const talkToHuman = (psid, callback) => {
   console.log("Handover to inbox")
   axios.post('https://graph.facebook.com/v2.6/me/pass_thread_control?access_token=' + process.env.PAGE_ACCESS_TOKEN,
-    {recipient:{id:"4078025715601492"},target_app_id:263902037430900})
+    {recipient:{id:psid},target_app_id:parseInt(process.env.PAGE_ID)})
     .then((response) => {
       console.log("Response: " + JSON.stringify(response.data));
       callback(true);
@@ -101,5 +115,6 @@ const validateLength = (message, length) => {
 
 exports.validateMessage = validateMessage;
 exports.validateTransactionNumber = validateTransactionNumber;
+exports.talkToBot = talkToBot;
 exports.talkToHuman = talkToHuman;
 exports.startNewCampaign = startNewCampaign;

@@ -52,7 +52,7 @@ const handlePostback = (res, sender_psid, received_postback) => {
       responses = responses_.helpMessage();
       break;
     case 'talk_human':
-      validations.talkToHuman((humanTalking) => {
+      validations.talkToHuman(sender_psid, (humanTalking) => {
         if (humanTalking) {
           responses = responses_.talkHuman();
         }
@@ -63,6 +63,7 @@ const handlePostback = (res, sender_psid, received_postback) => {
       });
       break;
     case 'init_campaign':
+      validations.talkToBot(sender_psid, () => {})
       campaign.initCampaign(sender_psid, (item) => {
         if (item === null) {
           responses = responses_.initCampaign();
@@ -94,10 +95,6 @@ const handlePostback = (res, sender_psid, received_postback) => {
         }
         handleResponses(res, sender_psid, responses);
       });
-      break;
-    case 'info_package_1':
-    case 'info_package_2':
-    case 'info_package_3':
       break;
     default:
       responses = responses_.helpMessage();
