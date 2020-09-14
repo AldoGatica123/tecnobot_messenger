@@ -13,7 +13,7 @@
 "greeting": [
     {
       "locale":"default",
-      "text":"Hola {{user_first_name}}! Soy tecnobot, te puedo ayudar a iniciar campañas de marketing digital!" 
+      "text":"Hola {{user_first_name}}! Soy Tecnobot, soy el robot que te puedo ayudar a iniciar campañas de marketing digital!" 
     }
   ]
 ```
