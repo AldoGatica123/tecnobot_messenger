@@ -74,9 +74,6 @@ const handlePostback = (res, sender_psid, received_postback) => {
         handleResponses(res, sender_psid, responses);
       });
       break;
-    case 'complete_payment':
-      responses = responses_.completePayment();
-      break;
     case 'MARKETING_COMBO_1':
     case 'MARKETING_COMBO_2':
     case 'MARKETING_COMBO_3':

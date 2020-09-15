@@ -45,10 +45,6 @@ const alreadyHuman = () => {
   return { text: "Nuestro asesor se comunicará pronto contigo"}
 }
 
-const completePayment = () => {
-  return { text: "Cuál es tu número de transacción?" }
-}
-
 const nextFieldRequired = (next_field, marketing_package) => {
   console.log("Next field: " + next_field)
   switch (next_field) {
