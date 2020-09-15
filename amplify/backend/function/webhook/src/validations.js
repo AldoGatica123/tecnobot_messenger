@@ -28,7 +28,7 @@ const validateMessage = (message, field) => {
 
 const validateTransactionNumber = (transaction_number, callback) => {
   console.log("Checking transaction number")
-  axios.post('https://2swpoc4hc4.execute-api.us-east-1.amazonaws.com/api/payment',
+  axios.post('https://00bgzxxjsf.execute-api.us-east-1.amazonaws.com/api/payment',
     {
     transaction_number: transaction_number
   }, {
@@ -47,7 +47,7 @@ const validateTransactionNumber = (transaction_number, callback) => {
 const startNewCampaign = (conversation, callback) => {
   console.log("Starting new campaign")
   console.log("Payload: " + JSON.stringify(conversation))
-  axios.post('https://oe5ye2mdwj.execute-api.us-east-1.amazonaws.com/api/adwords',
+  axios.post('https://o2ka6ctw13.execute-api.us-east-1.amazonaws.com/api/adwords',
     conversation
     , {
       headers: headers

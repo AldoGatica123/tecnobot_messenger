@@ -273,7 +273,6 @@ exports.helpMessage = helpMessage;
 exports.initCampaign = initCampaign;
 exports.talkHuman = talkHuman;
 exports.alreadyHuman = alreadyHuman;
-exports.completePayment = completePayment;
 exports.nextFieldRequired = nextFieldRequired;
 exports.countryList = countryList;
 exports.errorInField = errorInField;
